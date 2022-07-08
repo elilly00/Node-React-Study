@@ -23,14 +23,14 @@ mongoose
   });
   
 // Register Route
-app.post('/register', (req, res) => {
+app.post("/register", (req, res) => {
   
   // 회원 가입할 때 필요한 정보들을 client에서 가져오면 그것들을 DB에 넣어준다.
 
   const user = new User(req.body); // request.body로 client에서 보내는 정보를 받아준다.
 
   user.save((err, userInfo) => { // 'save()' : mongoDB에서 오는 정보 method(client에서 보낸 정보들이 user model에 저장됨)
-    if(err) return res.json({ success: false, err});
+    if(err) return res.json({ success: false, err });
     return res.status(200).json({
       success: true,
     });
