@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");  // 몽구스 불러옴
+const bcrypt = require("bcrypt"); // bcrypt 불러옴
+const saltRounds = 10; // slat 값이 몇자리인지 나타냄
 
 const userSchema = mongoose.Schema({
     name: {
@@ -28,6 +30,28 @@ const userSchema = mongoose.Schema({
     },
     tokenExp: { // token 사용기한 설정
         type: Number,
+    }
+});
+
+// user 정보를 저장하기전에 
+userSchema.pre("save", function (next) {
+    var user = this;
+
+    if(user.isModified("password")) { // 비밀번호를 바꿀 때만
+        // 비밀번호 암호화 시킴
+        bcrypt.genSalt(saltRounds, function(err, salt) {
+            if(err) return next(err);
+
+            bcrypt.hash(user.password, salt, function(err, hash) {
+                if(err) return next(err);
+                user.password = hash;  
+                // user.password : plainPassWord
+                // hash : 암호화된 비밀번호
+                next(); // 전저리가 끝난 후 후작업하기 위해 넘겨준다.
+            });
+        });
+    } else { // 비밀번호가 아닌 다른 데이터를 변경한다면 바로 넘겨준다.
+        next();
     }
 });
 
