@@ -55,6 +55,15 @@ userSchema.pre("save", function (next) {
     }
 });
 
+// 
+userSchema.methods.comparePasssword = function(plainPassWord, cb) { // (plainPassWord, callback)
+    // plainPassword: 1234567 / 암호화된 password: 
+    bcrypt.compare(plainPassWord, this.password, function(err, isMatch) {
+        if(err) return cb(err), // 비밀번호가 일치하지 않아 에러가 발생하면 callback도 에러가 뜸
+            cb(null, isMatch); //  비밀번호가 일치한다면 에러엔 null, isMatch는 true
+    });
+};
+
 const User = mongoose.model("User", userSchema);  // 해당 스키마를 Model로 감싸줌
 
 module.exports = { User }; // 다른 곳에서도 사용할 수 있도록 함
