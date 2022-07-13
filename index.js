@@ -2,7 +2,7 @@ const express = require("express");  // 다운받은 모듈 불러옴
 const app = express();   // function을 이용해 새로운 express app 생성
 const port = 5000;       // port는 아무거나 설정해도 됨
 const bodyParser = require("body-parser"); // body-parser을 가져옴
-
+const cookieParser = require("cookie-parser"); // cookie-parser을 가져옴
 const config = require("./config/key");  // config.js를 가져옴
 
 const { User } = require("./models/User");  // User Model을 가져옴
@@ -13,6 +13,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // 'application/json'로 된 데이터를 분석해 json형식으로 parsing해 가져올 수 있게 함
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 const mongoose = require("mongoose");
 mongoose
@@ -61,9 +62,18 @@ app.post("/login", (req, res) => {
       });
     });
   });
+
   // 3. 비밀번호가 일치하다면 토큰 생성
   user.generateToken((err, user) => {
+    if(err) return res.status(400).send(err);
 
+    // token을 저장한다. 어디에? 쿠키, 로컬스토리지
+    res.cookie("x_auth", user.token)
+       .status(200)
+       .json({ 
+          loginSucess: true, 
+          userId: user._id 
+        });
   });
 
 });
