@@ -53,29 +53,21 @@ app.post("/login", (req, res) => {
         loginSucess: false,
         message: "제공된 이메일에 해당하는 유저가 없습니다."
       });
-    };
+    }
 
     // 2. 요청된 이메일이 DB에 있다면 비밀번호가 일치하는지 확인
     user.comparePassword(req.body.password, (err, isMatch) => { // comparePassword 메소드 생성 (User.js에서 생성함)
-      if(!isMatch) return res.json({ 
-        loginSucess: false, messgae: "비밀번호가 틀렸습니다."
+      if(!isMatch) return res.json({ loginSuccess: false, message: "비밀번호가 틀렸습니다." });
+      
+      // 3. 비밀번호가 일치하다면 토큰 생성
+      user.generateToken((err, user) => {
+        if(err) return res.status(400).send(err);
+    
+        // token을 저장한다. 어디에? 쿠키, 로컬스토리지 등
+        res.cookie("x_auth", user.token).status(200).json({ loginSuccess: true, userId: user._id });
       });
     });
   });
-
-  // 3. 비밀번호가 일치하다면 토큰 생성
-  user.generateToken((err, user) => {
-    if(err) return res.status(400).send(err);
-
-    // token을 저장한다. 어디에? 쿠키, 로컬스토리지
-    res.cookie("x_auth", user.token)
-       .status(200)
-       .json({ 
-          loginSucess: true, 
-          userId: user._id 
-        });
-  });
-
 });
 
 // 5000번 port에서 실행

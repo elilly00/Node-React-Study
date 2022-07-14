@@ -35,8 +35,8 @@ const userSchema = mongoose.Schema({
 });
 
 // user 정보를 저장하기전에 
-userSchema.pre("save", function (next) {
-    var user = this;
+userSchema.pre("save", function(next) {
+    let user = this;
 
     if(user.isModified("password")) { // 비밀번호를 바꿀 때만
         // 비밀번호 암호화 시킴
@@ -56,9 +56,8 @@ userSchema.pre("save", function (next) {
     }
 });
 
-// 
-userSchema.methods.comparePasssword = function(plainPassWord, cb) { // (plainPassWord, callback)
-    // plainPassword: 1234567 / 암호화된 password:
+userSchema.methods.comparePassword = function(plainPassWord, cb) { // (plainPassWord, callback)
+    // plainPassword: 1234567 / 암호화된 password: $2b$10$tvZZ.BeVl9cbbkUD9uWR/Ox1ud5UNXTw/.UPEaPIUn1HYhY3F4Mei
     bcrypt.compare(plainPassWord, this.password, function(err, isMatch) {
         if(err) return cb(err), // 비밀번호가 일치하지 않아 에러가 발생하면 callback도 에러가 뜸
             cb(null, isMatch); //  비밀번호가 일치한다면 에러엔 null, isMatch는 true
@@ -66,19 +65,17 @@ userSchema.methods.comparePasssword = function(plainPassWord, cb) { // (plainPas
 };
 
 userSchema.methods.generateToken = function(cb) {
-
     let user = this;
 
-    // jsonwebtoken을 이용해 토큰 생성
-
-    let token = jwt = sign(user._id, "secretToken");
+    // jsonwebtoken을 이용해 token 생성
+    let token = jwt.sign(user._id.toHexString(), "secretToken");
 
     user.token = token;
     user.save(function(err, user) {
-        if(err) return cb(err);
-        cb(null, user);
+      if(err) return cb(err);
+      cb(null, user);
     });
-};
+  };
 
 const User = mongoose.model("User", userSchema);  // 해당 스키마를 Model로 감싸줌
 
