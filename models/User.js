@@ -56,11 +56,11 @@ userSchema.pre("save", function(next) {
     }
 });
 
-userSchema.methods.comparePassword = function(plainPassWord, cb) { // (plainPassWord, callback)
-    // plainPassword: 1234567 / 암호화된 password: $2b$10$tvZZ.BeVl9cbbkUD9uWR/Ox1ud5UNXTw/.UPEaPIUn1HYhY3F4Mei
-    bcrypt.compare(plainPassWord, this.password, function(err, isMatch) {
+userSchema.methods.comparePassword = function(plainPassword, cb) { // (plainPassWord, callback)
+    // plainPassword: 1234567 / 암호화된 password: $2b$Z..
+    bcrypt.compare(plainPassword, this.password, function(err, isMatch) {
         if(err) return cb(err), // 비밀번호가 일치하지 않아 에러가 발생하면 callback도 에러가 뜸
-            cb(null, isMatch); //  비밀번호가 일치한다면 에러엔 null, isMatch는 true
+        cb(null, isMatch); //  비밀번호가 일치한다면 에러엔 null, isMatch는 true
     });
 };
 
@@ -73,7 +73,7 @@ userSchema.methods.generateToken = function(cb) {
     user.token = token;
     user.save(function(err, user) {
       if(err) return cb(err);
-      cb(null, user);
+        cb(null, user);
     });
   };
 

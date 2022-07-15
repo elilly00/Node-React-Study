@@ -1,18 +1,20 @@
 const express = require("express");  // 다운받은 모듈 불러옴
 const app = express();   // function을 이용해 새로운 express app 생성
 const port = 5000;       // port는 아무거나 설정해도 됨
-const bodyParser = require("body-parser"); // body-parser을 가져옴
-const cookieParser = require("cookie-parser"); // cookie-parser을 가져옴
+
 const config = require("./config/key");  // config.js를 가져옴
 
-const { User } = require("./models/User");  // User Model을 가져옴
+const bodyParser = require("body-parser"); // body-parser을 가져옴
+const cookieParser = require("cookie-parser"); // cookie-parser을 가져옴
 
+const { User } = require("./models/User");  // User Model을 가져옴
 
 // 'application/x-www-from-urlencoded'로 된 데이터를 분석해 가져올 수 있게 함
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // 'application/json'로 된 데이터를 분석해 json형식으로 parsing해 가져올 수 있게 함
 app.use(bodyParser.json());
+
 app.use(cookieParser());
 
 const mongoose = require("mongoose");
@@ -21,7 +23,6 @@ mongoose
   .then(() => console.log("MongoDB Connected..."))  // 연결 성공 시 출력
   .catch((err) => console.log(err));  // 에러 발생 시 출력
 
-  
   // root directory에 오면 다음과 같은 문자가 출력됨
   app.get('/', (req, res) => {
     res.send('Hello World!!!');
@@ -45,7 +46,6 @@ app.post("/register", (req, res) => {
 
 // Login Route
 app.post("/login", (req, res) => {
-
   // 1. 요청된 이메일이 DB에서 있는지 찾기
   User.findOne({ email: req.body.email }, (err, user) => {
     if(!user) { // 유저가 없다면
@@ -57,15 +57,18 @@ app.post("/login", (req, res) => {
 
     // 2. 요청된 이메일이 DB에 있다면 비밀번호가 일치하는지 확인
     user.comparePassword(req.body.password, (err, isMatch) => { // comparePassword 메소드 생성 (User.js에서 생성함)
-      if(!isMatch) return res.json({ loginSuccess: false, message: "비밀번호가 틀렸습니다." });
-      
+      if(!isMatch) 
+        return res.json({ 
+          loginSuccess: false, 
+          message: "비밀번호가 틀렸습니다." 
+        });
+      });
       // 3. 비밀번호가 일치하다면 토큰 생성
       user.generateToken((err, user) => {
-        if(err) return res.status(400).send(err);
+        if (err) return res.status(400).send(err);
     
         // token을 저장한다. 어디에? 쿠키, 로컬스토리지 등
         res.cookie("x_auth", user.token).status(200).json({ loginSuccess: true, userId: user._id });
-      });
     });
   });
 });
