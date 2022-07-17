@@ -7,6 +7,7 @@ const config = require("./config/key");  // config.js를 가져옴
 const bodyParser = require("body-parser"); // body-parser을 가져옴
 const cookieParser = require("cookie-parser"); // cookie-parser을 가져옴
 
+const { auth } = require("./middleware/auth");
 const { User } = require("./models/User");  // User Model을 가져옴
 
 // 'application/x-www-from-urlencoded'로 된 데이터를 분석해 가져올 수 있게 함
@@ -29,7 +30,7 @@ mongoose
   });
   
 // Register Route
-app.post("/register", (req, res) => {
+app.post("/api/users/register", (req, res) => {
   
   // 회원 가입할 때 필요한 정보들을 client에서 가져오면 그것들을 DB에 넣어준다
 
@@ -45,7 +46,7 @@ app.post("/register", (req, res) => {
 });
 
 // Login Route
-app.post("/login", (req, res) => {
+app.post("/api/users/login", (req, res) => {
   // 1. 요청된 이메일이 DB에서 있는지 찾기
   User.findOne({ email: req.body.email }, (err, user) => {
     if(!user) { // 유저가 없다면
@@ -72,6 +73,25 @@ app.post("/login", (req, res) => {
     });
   });
 });
+
+app.get("/api/users/auth", auth, (req,res) => {
+  // index.js까지 미들웨어를 통과해 왔다는 것은 Authentication이 True라는 의미
+  res.status(200).json({
+    _id: req.user._id,
+    isAdmin: req.user.role === 0 ? false : true,
+    isAuth: true,
+    email: req.user.email,
+    name: req.user.name,
+    lastname: req.user.lastname,
+    role: req.user.role,
+    image: req.user.image
+  });
+});
+
+
+
+
+
 
 // 5000번 port에서 실행
 app.listen(port, () => {
