@@ -2,7 +2,7 @@ const express = require("express");  // 다운받은 모듈 불러옴
 const app = express();   // function을 이용해 새로운 express app 생성
 const port = 5000;       // port는 아무거나 설정해도 됨
 
-const config = require("./server/config/key");  // config.js를 가져옴
+const config = require("./config/key");  // config.js를 가져옴
 
 const bodyParser = require("body-parser"); // body-parser을 가져옴
 const cookieParser = require("cookie-parser"); // cookie-parser을 가져옴
@@ -25,8 +25,12 @@ mongoose
   .catch((err) => console.log(err));  // 에러 발생 시 출력
 
   // root directory에 오면 다음과 같은 문자가 출력됨
-  app.get('/', (req, res) => {
+  app.get("/", (req, res) => {
     res.send('Hello World!!!');
+  });
+
+  app.get("/api/hello", (req, res) => {
+    res.send("요청 테스트");
   });
   
 // Register Route

@@ -14,12 +14,10 @@ let auth = (req, res, next) => {
         req.token = token;
         req.user = user;
         next(); // 미들웨어의 역할이 끝나면 다음 단계로 넘어갈 수 있도록 next()를 넣어준다.
-    })
+    });
 
     // 3. user가 있으면 인증 Okay
-
     // 4. user가 없으면 인증 No
-
 };  
 
 module.exports = { auth }; 

@@ -1,12 +1,12 @@
-import "./App.css";
-import React from "react";
+import './App.css';
+import React from 'react';
 // This is a React Router v6 app
 import {
   BrowserRouter,
   Routes,
   Route,
   Link,
-} from "react-router-dom";
+} from 'react-router-dom';
 
 import LandingPage from "./components/views/LandingPage/LandingPage";
 import LoginPage from "./components/views/LoginPage/LoginPage";
