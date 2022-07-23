@@ -1,7 +1,5 @@
 const express = require("express");  // 다운받은 모듈 불러옴
 const app = express();   // function을 이용해 새로운 express app 생성
-const port = 5000;       // port는 아무거나 설정해도 됨
-
 const config = require("./config/key");  // config.js를 가져옴
 
 const bodyParser = require("body-parser"); // body-parser을 가져옴
@@ -103,6 +101,8 @@ app.get("/api/users/logout", auth, (req, res) => {
       });
     });
 });
+
+const port = 5000;       // port는 아무거나 설정해도 됨
 
 // 5000번 port에서 실행
 app.listen(port, () => {
