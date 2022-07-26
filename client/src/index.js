@@ -4,6 +4,8 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+import 'antd/dist/antd.css';
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render( 
   // 보여주고 싶은 컴포넌트를 작성함
