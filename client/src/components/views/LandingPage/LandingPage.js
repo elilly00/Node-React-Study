@@ -1,6 +1,6 @@
 import React, { useEffect}  from 'react';
 import axios from 'axios';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
 function LandingPage(props) { 
     const navigate = useNavigate();

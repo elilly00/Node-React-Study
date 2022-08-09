@@ -1,6 +1,7 @@
 import {
     LOGIN_USER, 
-    REGISTER_USER
+    REGISTER_USER,
+    AUTH_USER
 } from '../_actions/types';
 import { registerUser } from '../_actions/user_action';
 
@@ -12,6 +13,9 @@ export default function (state = {}, action) {
         case REGISTER_USER:
             return { ...state, register: action.payload };
             break;
+            case AUTH_USER:
+                return { ...state, userData: action.payload }; // 'index.js'에서 나열된 데이터들이 'action.payload'에 저장되어 userData로 정의함
+                break;    
         default:
             return state;
     }
