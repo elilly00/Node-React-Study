@@ -1,5 +1,4 @@
 import './App.css';
-import React from 'react';
 // This is a React Router v6 app
 import {
   BrowserRouter,
@@ -14,12 +13,16 @@ import RegisterPage from "./components/views/RegisterPage/RegisterPage";
 import Auth from "./hoc/auth";
 
 function App() {
+  const AuthLandingPage = Auth(LandingPage, null);
+  const AuthLoginPage = Auth(LoginPage, false);
+  const AuthRegisterPage = Auth(RegisterPage, false);
+  
   return (
     <BrowserRouter>
         <Routes>
-          <Route exact path="/" element = {Auth(LandingPage, null)} />
-          <Route exact path="/login" element = {Auth(LoginPage, false)} />
-          <Route exact path="/register" element = {Auth(RegisterPage, false)} />
+          <Route path="/" element = {<AuthLandingPage/>} />
+          <Route path="/login" element = {<AuthLoginPage/>} />
+          <Route path="/register" element = {<AuthRegisterPage/>} />
         </Routes>
     </BrowserRouter>
   );
